@@ -4,6 +4,8 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const bcrypt = require('bcrypt');
+const saltRounds = 5;
 const verifyToken = require('../middleware/auth');
 
 router.post('/register', async (req, res) => {
@@ -19,7 +21,10 @@ router.post('/register', async (req, res) => {
     if (existedUser) {
       return res.status(400).json({ message: 'El nombre de usuario o el correo electrónico ya están en uso' });
     }
-    const newUser = new User({ name, lastname, username, password, email });
+
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    const newUser = new User({ name, lastname, username, password: hashedPassword, email });
     await newUser.save();
     return res.status(201).json({message: 'Usuario registrado', status: 201});
   } catch (err) {
@@ -30,10 +35,16 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
   try {
-    const user = await User.findOne({ username, password });
+    const user = await User.findOne({ username });
     if (!user) {
-      return res.status(401).json({message:'Credenciales inválidas'});
+      return res.status(401).json({ message: 'Credenciales inválidas: No existe ese usuario' });
     }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Credenciales inválidas: Contraseña incorrecta' });
+    }
+    
     const token = jwt.sign({ id: user._id, username: user.username, email: user.email }, process.env.SECRET_KEY, { expiresIn: '20m' });
     return res.json({ token });
   } catch (error) {
@@ -97,7 +108,10 @@ router.put('/changePassword', verifyToken, async (req, res) => {
     if (!user) {
       return res.status(400).json( {message: 'Usuario no encontrado'});
     }
-    user.password = newPassword
+
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    user.password = hashedPassword
     await user.save();
     res.status(201).json( {message: 'Contraseña cambiada existosamente'});
   } catch (error) {
