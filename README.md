@@ -50,7 +50,7 @@ La arquitectura del sistema se basa en una API RESTful que interactúa con una b
 
 ## Screenshots
 
-Modulo Web creado con react y consumiendo esta api.
+Modulo Web creado con react y consumiendo esta api. Visitalo aqui: [modulo web](https://modulo-web.vercel.app)
 ![](https://res.cloudinary.com/dwuv0l98b/image/upload/v1719129345/mortcmbq8vkhfs1czwrh.png)
 ![](https://res.cloudinary.com/dwuv0l98b/image/upload/v1719129345/wgf6ovksrmysuexdvw1t.png)
 ![](https://res.cloudinary.com/dwuv0l98b/image/upload/v1719129345/qaspzcooborwh0jinp8p.png)
