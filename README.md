@@ -1,4 +1,4 @@
-# Módulo Web para Recuperación de Contraseñas
+# Módulo Web API
 
 ## Descripción del Proyecto
 Este proyecto tiene como objetivo desarrollar un módulo web para la recuperación de contraseñas de usuarios registrados en una base de datos. Este módulo incluye funcionalidades como:
